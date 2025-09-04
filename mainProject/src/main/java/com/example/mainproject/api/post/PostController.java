@@ -25,6 +25,7 @@ public class PostController {
         return new PostResponse(p);
     }
 
+
     // 단건 조회(id)
     @GetMapping("/{id}")
     public PostResponse get(@PathVariable Long id) {
