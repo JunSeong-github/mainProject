@@ -13,7 +13,7 @@ export default function ListPage() {
 
     return (
         <div style={{ maxWidth:800, margin:"24px auto", padding:"0 16px" }}>
-            <h1>게시글</h1>
+            <h1>게시글테스트</h1>
             <div style={{ display:"flex", gap:8, marginBottom:12 }}>
                 <input value={q} onChange={e=>setQ(e.target.value)} placeholder="검색어" />
                 <Link to="/write"><button>새 글</button></Link>

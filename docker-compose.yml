@@ -18,9 +18,10 @@ services:
       retries: 20
 
   backend:
-    build:
-      context: ./mainProject
-      dockerfile: Dockerfile
+    image: ghcr.io/junseong-github/mainproject-backend:latest
+#    build:
+#      context: ./mainProject
+#      dockerfile: Dockerfile
     container_name: board-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/board?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul
@@ -36,9 +37,10 @@ services:
       - "8081:8080"
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/junseong-github/mainproject-frontend:latest
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
     container_name: board-frontend
     depends_on:
       - backend
