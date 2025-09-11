@@ -66,17 +66,16 @@ ERP에서 자주 사용되는 **구매, 판매, 입고, 출고, 재고 관리** 
 
 ---
 
-## 📌 프로젝트 구조 (일부)
-src/main/java/com/example/mainproject
-├─ api
-│ ├─ post (게시판 모듈)
-│ └─ erp
-│ ├─ controller (ERP API 컨트롤러)
-│ ├─ dto (요청/응답 DTO)
-│ └─ service (비즈니스 로직)
-├─ domain (엔티티)
-├─ repository (JPA 리포지토리)
-└─ application (Spring Boot 메인)
+<pre> ## 📌 프로젝트 구조 (일부) ``` src/main/java/com/example/mainproject 
+  ├─ api │ 
+  ├─ post (게시판 모듈) 
+  │ └─ erp 
+  │ ├─ controller (ERP API 컨트롤러) 
+  │ ├─ dto (요청/응답 DTO) 
+  │ └─ service (비즈니스 로직) 
+  ├─ domain (엔티티) 
+  ├─ repository (JPA 리포지토리) 
+  └─ application (Spring Boot 메인) ``` </pre>
 
 
 ---
