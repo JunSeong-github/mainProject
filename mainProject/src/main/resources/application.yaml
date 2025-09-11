@@ -9,11 +9,15 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate          # ✅ 스키마는 검증만 (자동 생성/수정 안 함)
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
+
+  flyway:
+    enabled: true                 # ✅ Flyway 활성화
+    # locations: classpath:db/migration   # (필요시) 마이그레이션 경로 기본값이라 생략 가능
 
 logging:
   level:
