@@ -67,4 +67,28 @@ ERP에서 자주 사용되는 **구매, 판매, 입고, 출고, 재고 관리** 
 ---
 
 ## 📌 프로젝트 구조 (일부)
+src/main/java/com/example/mainproject
+├─ api
+│ ├─ post (게시판 모듈)
+│ └─ erp
+│ ├─ controller (ERP API 컨트롤러)
+│ ├─ dto (요청/응답 DTO)
+│ └─ service (비즈니스 로직)
+├─ domain (엔티티)
+├─ repository (JPA 리포지토리)
+└─ application (Spring Boot 메인)
+
+
+---
+
+## 🗓️ 진행 현황 요약
+
+- ✅ 게시판 CRUD + 프론트 연결 완료  
+- ✅ ERP 기본 도메인(Purchase, Sales, GRN, Shipment, Inventory, Warehouse) 설계 완료  
+- ✅ Docker Compose 실행 환경 구축 (백엔드+프론트+DB)  
+- ✅ GitHub Actions CI 빌드 파이프라인 설정 완료  
+- 🔄 ERP 서비스 상세 로직/연동 개발 중  
+- 🔄 ERP 화면 프론트엔드 연동 작업 예정  
+- 🔄 JWT 인증/권한 처리 예정  
+- 🔄 테스트 코드 및 서버 배포 예정  
 
