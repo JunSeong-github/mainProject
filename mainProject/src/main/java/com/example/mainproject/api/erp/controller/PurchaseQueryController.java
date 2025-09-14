@@ -16,25 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class PurchaseQueryController {
 
     private final PurchaseQueryService query;
-    private final PurchaseService command;
 
+    // 목록 조회: GET /api/purchase/orders
     @GetMapping("/orders")
     public PageResp<POResponse> list(@RequestParam(required = false) String q, Pageable pageable) {
         return query.list(q, pageable);
     }
 
+    // 단건 조회: GET /api/purchase/orders/{id}
     @GetMapping("/orders/{id}")
     public POResponse get(@PathVariable Long id) {
         return query.get(id);
-    }
-
-    @PostMapping("/orders")
-    public POResponse create(@Valid @RequestBody POCreateRequest req) {
-        return command.createPO(req);
-    }
-
-    @PostMapping("/orders/{id}/approve")
-    public POResponse approve(@PathVariable Long id) {
-        return command.approvePO(id);
     }
 }

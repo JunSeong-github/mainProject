@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class SalesQueryController {
 
     private final SalesQueryService query;
-    private final SalesService command;
 
     @GetMapping("/orders")
     public PageResp<SOResponse> list(@RequestParam(required = false) String q, Pageable pageable) {
@@ -26,15 +25,5 @@ public class SalesQueryController {
     @GetMapping("/orders/{id}")
     public SOResponse get(@PathVariable Long id) {
         return query.get(id);
-    }
-
-    @PostMapping("/orders")
-    public SOResponse create(@Valid @RequestBody SOCreateRequest req) {
-        return command.createSO(req);
-    }
-
-    @PostMapping("/orders/{id}/approve")
-    public SOResponse approve(@PathVariable Long id) {
-        return command.approveSO(id);
     }
 }

@@ -1,51 +1,26 @@
 services:
-  db:
+  mysql:
     image: mysql:8.0
-    container_name: board-db
+    container_name: mysql-erp
     environment:
+      MYSQL_DATABASE: erp
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: board
       TZ: Asia/Seoul
     ports:
-      - "3307:3306"               # <-- 호스트 3307로 변경 (로컬 MySQL과 충돌 회피)
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - "3307:3306"   # 선택: 호스트에서 접근 필요하면 열기
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
       interval: 5s
-      timeout: 3s
-      retries: 20
+      retries: 30
 
   backend:
-    image: ghcr.io/junseong-github/mainproject-backend:latest
-#    build:
-#      context: ./mainProject
-#      dockerfile: Dockerfile
-    container_name: board-backend
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/board?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_PROFILES_ACTIVE: prod
-      TZ: Asia/Seoul
+    build: .
+    container_name: app-backend
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
+    environment:
+      # ← 이것 하나로 'docker' 프로필이 자동 적용됨
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - "8081:8080"
-
-  frontend:
-    image: ghcr.io/junseong-github/mainproject-frontend:latest
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
-    container_name: board-frontend
-    depends_on:
-      - backend
-    ports:
-      - "80:80"
-
-volumes:
-  db_data:
+      - "8081:8081"

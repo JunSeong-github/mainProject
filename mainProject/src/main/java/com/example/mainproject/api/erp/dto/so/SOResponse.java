@@ -1,14 +1,16 @@
 package com.example.mainproject.api.erp.dto.so;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Value;
 
 import java.time.LocalDate;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Value
+@Builder
 public class SOResponse {
-    private Long id;
-    private String soNo;
-    private String customerName;
-    private String status;
-    private LocalDate orderDate;
+    Long id;
+    String soNo;
+    String customerName;  // 고객명
+    String status;        // 상태 (DRAFT, APPROVED 등)
+    LocalDate orderDate;
 }
