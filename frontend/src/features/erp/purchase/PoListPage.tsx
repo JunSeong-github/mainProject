@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { listPO, approvePO, type PO, type PageResp } from "../api";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -11,7 +11,8 @@ export default function PoListPage(){
     const { data, isLoading } = useQuery<PageResp<PO>>({
         queryKey:["po", q, page],
         queryFn:()=>listPO({ q, page, size:10, sort:"orderDate,desc" }),
-        keepPreviousData:true, staleTime:30_000
+        placeholderData: keepPreviousData,
+        staleTime:30_000,
     });
 
     const approve = useMutation({
@@ -19,7 +20,9 @@ export default function PoListPage(){
         onSuccess: ()=> qc.invalidateQueries({ queryKey:["po"] })
     });
 
-    const rows = data?.content ?? [];
+    // const rows = data?.content ?? [];
+
+    const rows: PO[] = data?.content ?? ([] as PO[]);
 
     return (
         <div style={{maxWidth:960, margin:"24px auto"}}>
@@ -36,7 +39,11 @@ export default function PoListPage(){
                         <tr key={po.id}>
                             <td>{po.id}</td>
                             <td>{po.poNo}</td>
-                            <td>{po.bpName}</td>
+                            <td>
+                                <Link to={`/erp/purchase/${po.id}`} style={{ textDecoration: 'underline' }}>
+                                {po.bpName}
+                                </Link>
+                                </td>
                             <td>{po.status}</td>
                             <td>{po.orderDate}</td>
                             <td>{po.status==="DRAFT" && <button onClick={()=>approve.mutate(po.id)}>승인</button>}</td>

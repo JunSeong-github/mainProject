@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/erp/purchase")
+@RequestMapping("/api/purchase")
 public class PurchaseController {
 
     private final PurchaseService svc;

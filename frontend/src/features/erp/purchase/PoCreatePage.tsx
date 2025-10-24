@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPO, type POCreate } from "../api";
+import { createPO /*, type POCreate*/ } from "../api";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 type Line = { itemId: number; qty: number; unitPrice: number };
 
-type Item = { id: number; name: string; price?: number };
+type Item = { id: number; name: string; price: number }; // price를 필수로
 
 const ITEMS: Item[] = [
     { id: 1, name: "아메리카노", price: 1500 },
-    { id: 2, name: "라떼", price: 2500 },
-    { id: 3, name: "그린티", price: 2000 },
+    { id: 2, name: "라떼",       price: 2500 },
+    { id: 3, name: "그린티",     price: 2000 },
 ];
 
 export default function PoCreatePage() {
@@ -20,14 +20,14 @@ export default function PoCreatePage() {
     const [bpName, setBpName] = useState("거래처");
     const [orderDate, setOrderDate] = useState(new Date().toISOString().slice(0, 10));
     const [remark, setRemark] = useState("");
-    const [lines, setLines] = useState<Line[]>([{ itemId: 1, qty: 1, unitPrice: 1000 }]);
+    const [lines, setLines] = useState<Line[]>([{ itemId: 1, qty: 1, unitPrice: 1500 }]);
 
     const mut = useMutation({
-        mutationFn: (body: POCreate) => createPO(body),
+        mutationFn: createPO, // ← 중복 타입 지정 제거
         onSuccess: () => { qc.invalidateQueries({ queryKey: ["po"] }); nav("/erp/purchase"); },
     });
 
-    const addLine = () => setLines(ls => [...ls, { itemId: 1, qty: 1, unitPrice: 1000 }]);
+    const addLine = () => setLines(ls => [...ls, { itemId: 1, qty: 1, unitPrice: 1500 }]);
     const removeLine = (i: number) => setLines(ls => ls.filter((_, idx) => idx !== i));
     const updateLine = <K extends keyof Line>(i: number, key: K, val: Line[K]) =>
         setLines(ls => ls.map((l, idx) => (idx === i ? { ...l, [key]: val } : l)));
@@ -45,29 +45,20 @@ export default function PoCreatePage() {
                 <button type="button" onClick={addLine}>라인 추가</button>
             </div>
 
-            {/* 라인 렌더링 */}
             <div style={{ marginTop: 16, display: "grid", gap: 8 }}>
                 {lines.map((ln, i) => (
                     <div key={i} style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr auto", gap: 8 }}>
-                        {/* 품목 드롭다운: label=이름, value=id */}
                         <select
-                            value={ln.itemId === undefined ? "" : String(ln.itemId)}  // ← 문자열로 통일
+                            value={ln.itemId} // ← 숫자 그대로
                             onChange={(e) => {
-                                const v = e.target.value;
-                                const id = v === "" ? undefined : Number(v);            // ← 숫자로 변환해 상태 저장
-
-                                updateLine(i, "itemId", id as any);
-
-                                // 단가 자동 세팅 (기존 로직 유지)
+                                const id = Number(e.target.value);
+                                updateLine(i, "itemId", id);
                                 const found = ITEMS.find(x => x.id === id);
-                                if (found?.price != null) {
-                                    updateLine(i, "unitPrice", found.price);
-                                }
+                                if (found) updateLine(i, "unitPrice", found.price); // 옵셔널 체크 불필요
                             }}
                         >
-                            <option value="" disabled>품목 선택</option>
                             {ITEMS.map(item => (
-                                <option key={item.id} value={String(item.id)}>  {/* ← 문자열로 통일 */}
+                                <option key={item.id} value={item.id}>
                                     {item.name}
                                 </option>
                             ))}
@@ -77,13 +68,13 @@ export default function PoCreatePage() {
                             type="number"
                             placeholder="수량"
                             value={ln.qty}
-                            onChange={e => updateLine(i, "qty", Number(e.target.value))}
+                            onChange={e => updateLine(i, "qty", Number(e.target.value || 0))}
                         />
                         <input
                             type="number"
                             placeholder="단가"
                             value={ln.unitPrice}
-                            onChange={e => updateLine(i, "unitPrice", Number(e.target.value))}
+                            onChange={e => updateLine(i, "unitPrice", Number(e.target.value || 0))}
                         />
                         <button type="button" onClick={() => removeLine(i)}>삭제</button>
                     </div>
@@ -95,6 +86,8 @@ export default function PoCreatePage() {
                 <button
                     onClick={() => {
                         const poNo = `PO-${Date.now()}`;
+                        // 백엔드 DTO가 String을 기대하면 여기서 map 해서 문자열 변환해서 보내기
+                        // mut.mutate({ poNo, bpName, orderDate, remark, lines: lines.map(l => ({ ...l, ... })) })
                         mut.mutate({ poNo, bpName, orderDate, remark, lines });
                     }}
                 >

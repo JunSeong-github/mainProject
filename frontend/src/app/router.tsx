@@ -19,6 +19,7 @@ export const router = createBrowserRouter([
     { path: "/erp/inv", element: <InventoryPage /> },
     { path: "/erp/purchase", element: <PoListPage /> },
     { path: "/erp/purchase/new", element: <PoCreatePage /> },
+        { path: "/erp/purchase/:id", element: <PoCreatePage /> },
     { path: "/erp/sales", element: <SoListPage /> },
     { path: "/erp/sales/new", element: <SoCreatePage /> },
     { path: "/erp/grn/new", element: <GrnCreatePage /> },

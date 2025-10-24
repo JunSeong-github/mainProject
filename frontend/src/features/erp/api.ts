@@ -80,14 +80,14 @@ export const listPO = (p: {
     sort?: string;
 }) =>
     api
-        .get<PageResp<PO>>("/api/erp/purchase/orders", { params: p })
+        .get<PageResp<PO>>("/api/purchase/orders", { params: p })
         .then((r) => r.data);
 
 export const createPO = (body: POCreate) =>
-    api.post<PO>("/api/erp/purchase/orders", body).then((r) => r.data);
+    api.post<PO>("/api/purchase/orders", body).then((r) => r.data);
 
 export const approvePO = (id: number) =>
-    api.post<PO>(`/api/erp/purchase/orders/${id}/approve`).then((r) => r.data);
+    api.post<PO>(`/api/purchase/orders/${id}/approve`).then((r) => r.data);
 
 // Sales
 export const listSO = (p: { q?: string; page?: number; size?: number; sort?: string }) =>
