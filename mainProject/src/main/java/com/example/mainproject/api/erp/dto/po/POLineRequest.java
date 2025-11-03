@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class POLineRequest {
+
     @NotNull
     private Long itemId;         // 품목 ID
     @NotNull

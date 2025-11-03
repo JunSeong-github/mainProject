@@ -40,7 +40,9 @@ public class PurchaseQueryService {
     }
 
     public POResponse get(Long id) {
+        // ★ 여기서 호출하는 findById는 EntityGraph로 lines(+item)까지 로딩됨
         PurchaseOrder po = poRepo.findById(id).orElseThrow();
+
         return POResponse.builder()
                 .id(po.getId())
                 .poNo(po.getPoNo())
@@ -48,6 +50,19 @@ public class PurchaseQueryService {
                 .status(po.getStatus().name())
                 .orderDate(po.getOrderDate())
                 .remark(po.getRemark())
+                // ★ 라인 매핑 추가 (PODetail에서 라인이 필요하므로)
+                .lines(
+                        (po.getLines() == null) ? List.of() :
+                                po.getLines().stream()
+                                        .map(l -> POResponse.POLineResp.builder()
+                                                .id(l.getId())
+                                                .itemId(l.getItem() != null ? l.getItem().getId() : null)
+                                                .qty(l.getQty())
+                                                .unitPrice(l.getUnitPrice())
+                                                .amount(l.getAmount())
+                                                .build()
+                                        ).toList()
+                )
                 .build();
     }
 }

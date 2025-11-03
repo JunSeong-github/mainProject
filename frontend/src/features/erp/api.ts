@@ -38,6 +38,24 @@ export type POCreate = {
     lines: POLine[];
 };
 
+export type POLineResp = {
+    id: number;
+    itemId: number;
+    qty: number;
+    unitPrice: number;
+    amount?: number;
+};
+
+export type PODetail = {
+    id: number;
+    poNo: string;
+    bpName: string;
+    status: string;     // "DRAFT" | "APPROVED" 등
+    orderDate: string;  // ISO yyyy-MM-dd
+    remark?: string;
+    lines: POLineResp[];
+};
+
 /** 주문 */
 export interface SO {
     id: number;
@@ -83,8 +101,14 @@ export const listPO = (p: {
         .get<PageResp<PO>>("/api/purchase/orders", { params: p })
         .then((r) => r.data);
 
+export const getPO = (id: number) =>
+    api.get<PODetail>(`/api/purchase/orders/${id}`).then(r => r.data);
+
 export const createPO = (body: POCreate) =>
     api.post<PO>("/api/purchase/orders", body).then((r) => r.data);
+
+export const updatePO = (id: number, body: POCreate) =>
+    api.put<PO>(`/api/purchase/orders/${id}`, body).then(r => r.data);
 
 export const approvePO = (id: number) =>
     api.post<PO>(`/api/purchase/orders/${id}/approve`).then((r) => r.data);

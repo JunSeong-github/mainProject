@@ -9,15 +9,17 @@ import java.math.BigDecimal;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class POLine {
 
+    // ★ 핵심: 부모 필드명 'po'로 선언 (mappedBy와 동일해야 함)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "po_id", nullable = false)  // 컬럼명은 DB에 맞게
+    private PurchaseOrder po;
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY, optional=false)
-    @JoinColumn(name="po_id")
-    private PurchaseOrder po;
-
-    @ManyToOne(fetch=FetchType.LAZY, optional=false)
-    @JoinColumn(name="item_id")
+    // 읽기/조인 전용 (같은 컬럼을 공유하므로 반드시 write 금지)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @Column(precision=18, scale=6, nullable=false)

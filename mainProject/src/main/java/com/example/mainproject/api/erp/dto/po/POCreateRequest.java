@@ -18,4 +18,5 @@ public class POCreateRequest {
     private String remark;     // 비고
     @NotNull
     private List<POLineRequest> lines; // 발주 상세 항목
+
 }
